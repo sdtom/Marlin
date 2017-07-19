@@ -120,6 +120,8 @@
   #include "pins_RIGIDBOARD.h"
 #elif MB(MEGACONTROLLER)
   #include "pins_MEGACONTROLLER.h"
+#elif MB(SSMART2N1)
+  #include "pins_SSMART2N1.h"
 #elif MB(99)
   #include "pins_99.h"
 #else
