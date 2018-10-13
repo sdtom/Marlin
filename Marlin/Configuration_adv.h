@@ -1105,10 +1105,10 @@
   #define X_CURRENT          800  // rms current in mA. Multiply by 1.41 for peak current.
   #define X_MICROSTEPS        16  // 0..256
 
-  #define Y_CURRENT         1000
+  #define Y_CURRENT          800
   #define Y_MICROSTEPS         8
 
-  #define Z_CURRENT         1100
+  #define Z_CURRENT         1000
   #define Z_MICROSTEPS        16
 
   #define X2_CURRENT         800
