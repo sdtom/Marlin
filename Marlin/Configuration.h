@@ -327,13 +327,13 @@
 #define MAX_REDUNDANT_TEMP_SENSOR_DIFF 10
 
 // Extruder temperature must be close to target for this long before M109 returns success
-#define TEMP_RESIDENCY_TIME 10  // (seconds)
-#define TEMP_HYSTERESIS 3       // (degC) range of +/- temperatures considered "close" to the target one
+#define TEMP_RESIDENCY_TIME 4  // (seconds)
+#define TEMP_HYSTERESIS 4       // (degC) range of +/- temperatures considered "close" to the target one
 #define TEMP_WINDOW     1       // (degC) Window around target to start the residency timer x degC early.
 
 // Bed temperature must be close to target for this long before M190 returns success
-#define TEMP_BED_RESIDENCY_TIME 10  // (seconds)
-#define TEMP_BED_HYSTERESIS 3       // (degC) range of +/- temperatures considered "close" to the target one
+#define TEMP_BED_RESIDENCY_TIME 60  // (seconds)
+#define TEMP_BED_HYSTERESIS 4       // (degC) range of +/- temperatures considered "close" to the target one
 #define TEMP_BED_WINDOW     1       // (degC) Window around target to start the residency timer x degC early.
 
 // The minimal temperature defines the temperature below which the heater will not be enabled It is used
@@ -378,10 +378,13 @@
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
-  // Rigidbot e3d v6
-  #define  DEFAULT_Kp 72.25
-  #define  DEFAULT_Ki 13.61
-  #define  DEFAULT_Kd 95.89
+  // Rigidbot e3d v6 - old
+  //#define  DEFAULT_Kp 72.25
+  //#define  DEFAULT_Ki 13.61
+  //#define  DEFAULT_Kd 95.89
+  #define  DEFAULT_Kp 19.98
+  #define  DEFAULT_Ki 3.69
+  #define  DEFAULT_Kd 27.83
 
   // Ultimaker
   // #define DEFAULT_Kp 22.2
