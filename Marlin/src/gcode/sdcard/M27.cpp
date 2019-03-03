@@ -20,32 +20,31 @@
  *
  */
 
-#include "../../../inc/MarlinConfig.h"
+#include "../../inc/MarlinConfig.h"
 
-#if ENABLED(FWRETRACT)
+#if ENABLED(SDSUPPORT)
 
-#include "../../../feature/fwretract.h"
-#include "../../gcode.h"
-#include "../../../module/motion.h"
+#include "../gcode.h"
+#include "../../sd/cardreader.h"
 
 /**
- * G10 - Retract filament according to settings of M207
- *       TODO: Handle 'G10 P' for tool settings and 'G10 L' for workspace settings
+ * M27: Get SD Card status
+ *      OR, with 'S<seconds>' set the SD status auto-report interval. (Requires AUTO_REPORT_SD_STATUS)
+ *      OR, with 'C' get the current filename.
  */
-void GcodeSuite::G10() {
-  #if EXTRUDERS > 1
-    const bool rs = parser.boolval('S');
+void GcodeSuite::M27() {
+  if (parser.seen('C')) {
+    SERIAL_ECHOPGM("Current file: ");
+    card.printFilename();
+  }
+
+  #if ENABLED(AUTO_REPORT_SD_STATUS)
+    else if (parser.seenval('S'))
+      card.set_auto_report_interval(parser.value_byte());
   #endif
-  fwretract.retract(true
-    #if EXTRUDERS > 1
-      , rs
-    #endif
-  );
+
+  else
+    card.report_status();
 }
 
-/**
- * G11 - Recover filament according to settings of M208
- */
-void GcodeSuite::G11() { fwretract.retract(false); }
-
-#endif // FWRETRACT
+#endif // SDSUPPORT

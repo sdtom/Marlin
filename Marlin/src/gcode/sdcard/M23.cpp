@@ -20,32 +20,23 @@
  *
  */
 
-#include "../../../inc/MarlinConfig.h"
+#include "../../inc/MarlinConfig.h"
 
-#if ENABLED(FWRETRACT)
+#if ENABLED(SDSUPPORT)
 
-#include "../../../feature/fwretract.h"
-#include "../../gcode.h"
-#include "../../../module/motion.h"
+#include "../gcode.h"
+#include "../../sd/cardreader.h"
 
 /**
- * G10 - Retract filament according to settings of M207
- *       TODO: Handle 'G10 P' for tool settings and 'G10 L' for workspace settings
+ * M23: Open a file
  */
-void GcodeSuite::G10() {
-  #if EXTRUDERS > 1
-    const bool rs = parser.boolval('S');
+void GcodeSuite::M23() {
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    card.removeJobRecoveryFile();
   #endif
-  fwretract.retract(true
-    #if EXTRUDERS > 1
-      , rs
-    #endif
-  );
+  // Simplify3D includes the size, so zero out all spaces (#7227)
+  for (char *fn = parser.string_arg; *fn; ++fn) if (*fn == ' ') *fn = '\0';
+  card.openFile(parser.string_arg, true);
 }
 
-/**
- * G11 - Recover filament according to settings of M208
- */
-void GcodeSuite::G11() { fwretract.retract(false); }
-
-#endif // FWRETRACT
+#endif // SDSUPPORT

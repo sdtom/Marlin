@@ -20,32 +20,29 @@
  *
  */
 
-#include "../../../inc/MarlinConfig.h"
+#include "../../inc/MarlinConfig.h"
 
-#if ENABLED(FWRETRACT)
+#if ENABLED(LONG_FILENAME_HOST_SUPPORT)
 
-#include "../../../feature/fwretract.h"
-#include "../../gcode.h"
-#include "../../../module/motion.h"
+#include "../gcode.h"
+#include "../../sd/cardreader.h"
 
 /**
- * G10 - Retract filament according to settings of M207
- *       TODO: Handle 'G10 P' for tool settings and 'G10 L' for workspace settings
+ * M33: Get the long full path of a file or folder
+ *
+ * Parameters:
+ *   <dospath> Case-insensitive DOS-style path to a file or folder
+ *
+ * Example:
+ *   M33 miscel~1/armchair/armcha~1.gco
+ *
+ * Output:
+ *   /Miscellaneous/Armchair/Armchair.gcode
  */
-void GcodeSuite::G10() {
-  #if EXTRUDERS > 1
-    const bool rs = parser.boolval('S');
-  #endif
-  fwretract.retract(true
-    #if EXTRUDERS > 1
-      , rs
-    #endif
-  );
+void GcodeSuite::M33() {
+
+  card.printLongPath(parser.string_arg);
+
 }
 
-/**
- * G11 - Recover filament according to settings of M208
- */
-void GcodeSuite::G11() { fwretract.retract(false); }
-
-#endif // FWRETRACT
+#endif // LONG_FILENAME_HOST_SUPPORT

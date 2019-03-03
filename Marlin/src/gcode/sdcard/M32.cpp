@@ -20,32 +20,40 @@
  *
  */
 
-#include "../../../inc/MarlinConfig.h"
+#include "../../inc/MarlinConfig.h"
 
-#if ENABLED(FWRETRACT)
+#if ENABLED(SDSUPPORT)
 
-#include "../../../feature/fwretract.h"
-#include "../../gcode.h"
-#include "../../../module/motion.h"
+#include "../gcode.h"
+#include "../../sd/cardreader.h"
+#include "../../module/printcounter.h"
+#include "../../module/planner.h"
 
 /**
- * G10 - Retract filament according to settings of M207
- *       TODO: Handle 'G10 P' for tool settings and 'G10 L' for workspace settings
+ * M32: Select file and start SD Print
+ *
+ * Examples:
+ *
+ *    M32 !PATH/TO/FILE.GCO#      ; Start FILE.GCO
+ *    M32 P !PATH/TO/FILE.GCO#    ; Start FILE.GCO as a procedure
+ *    M32 S60 !PATH/TO/FILE.GCO#  ; Start FILE.GCO at byte 60
+ *
  */
-void GcodeSuite::G10() {
-  #if EXTRUDERS > 1
-    const bool rs = parser.boolval('S');
-  #endif
-  fwretract.retract(true
-    #if EXTRUDERS > 1
-      , rs
-    #endif
-  );
+void GcodeSuite::M32() {
+  if (IS_SD_PRINTING()) planner.synchronize();
+
+  if (card.isDetected()) {
+    const bool call_procedure = parser.boolval('P');
+
+    card.openFile(parser.string_arg, true, call_procedure);
+
+    if (parser.seenval('S')) card.setIndex(parser.value_long());
+
+    card.startFileprint();
+
+    // Procedure calls count as normal print time.
+    if (!call_procedure) print_job_timer.start();
+  }
 }
 
-/**
- * G11 - Recover filament according to settings of M208
- */
-void GcodeSuite::G11() { fwretract.retract(false); }
-
-#endif // FWRETRACT
+#endif // SDSUPPORT

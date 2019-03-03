@@ -20,32 +20,20 @@
  *
  */
 
-#include "../../../inc/MarlinConfig.h"
+#include "../../inc/MarlinConfig.h"
 
-#if ENABLED(FWRETRACT)
+#if ENABLED(SDSUPPORT)
 
-#include "../../../feature/fwretract.h"
-#include "../../gcode.h"
-#include "../../../module/motion.h"
+#include "../gcode.h"
+#include "../../sd/cardreader.h"
 
 /**
- * G10 - Retract filament according to settings of M207
- *       TODO: Handle 'G10 P' for tool settings and 'G10 L' for workspace settings
+ * M20: List SD card to serial output
  */
-void GcodeSuite::G10() {
-  #if EXTRUDERS > 1
-    const bool rs = parser.boolval('S');
-  #endif
-  fwretract.retract(true
-    #if EXTRUDERS > 1
-      , rs
-    #endif
-  );
+void GcodeSuite::M20() {
+  SERIAL_ECHOLNPGM(MSG_BEGIN_FILE_LIST);
+  card.ls();
+  SERIAL_ECHOLNPGM(MSG_END_FILE_LIST);
 }
 
-/**
- * G11 - Recover filament according to settings of M208
- */
-void GcodeSuite::G11() { fwretract.retract(false); }
-
-#endif // FWRETRACT
+#endif // SDSUPPORT

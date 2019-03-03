@@ -20,32 +20,23 @@
  *
  */
 
-#include "../../../inc/MarlinConfig.h"
+#include "../../inc/MarlinConfig.h"
 
-#if ENABLED(FWRETRACT)
+#if ENABLED(SDCARD_SORT_ALPHA) && ENABLED(SDSORT_GCODE)
 
-#include "../../../feature/fwretract.h"
-#include "../../gcode.h"
-#include "../../../module/motion.h"
+#include "../gcode.h"
+#include "../../sd/cardreader.h"
 
 /**
- * G10 - Retract filament according to settings of M207
- *       TODO: Handle 'G10 P' for tool settings and 'G10 L' for workspace settings
+ * M34: Set SD Card Sorting Options
  */
-void GcodeSuite::G10() {
-  #if EXTRUDERS > 1
-    const bool rs = parser.boolval('S');
-  #endif
-  fwretract.retract(true
-    #if EXTRUDERS > 1
-      , rs
-    #endif
-  );
+void GcodeSuite::M34() {
+  if (parser.seen('S')) card.setSortOn(parser.value_bool());
+  if (parser.seenval('F')) {
+    const int v = parser.value_long();
+    card.setSortFolders(v < 0 ? -1 : v > 0 ? 1 : 0);
+  }
+  //if (parser.seen('R')) card.setSortReverse(parser.value_bool());
 }
 
-/**
- * G11 - Recover filament according to settings of M208
- */
-void GcodeSuite::G11() { fwretract.retract(false); }
-
-#endif // FWRETRACT
+#endif // SDCARD_SORT_ALPHA && SDSORT_GCODE
