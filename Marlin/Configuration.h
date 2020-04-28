@@ -446,9 +446,9 @@
   //#define  DEFAULT_Kp 72.25
   //#define  DEFAULT_Ki 13.61
   //#define  DEFAULT_Kd 95.89
-  #define  DEFAULT_Kp 19.98
-  #define  DEFAULT_Ki 3.69
-  #define  DEFAULT_Kd 27.83
+  #define  DEFAULT_Kp 31.93
+  #define  DEFAULT_Ki 5.57
+  #define  DEFAULT_Kd 45.78
 
   // Ultimaker
   //#define DEFAULT_Kp 22.2
